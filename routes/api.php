@@ -19,6 +19,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'v1', 'middleware' => 'guest'], function () {
+
+    //Auth
+    Route::post('/register', 'AuthController@register');
+    Route::post('/login', 'AuthController@login');
+    Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail');
+    Route::post('/password/reset', 'ResetPasswordController@reset');
+    Route::get('/user/{id}', 'UserController@show');
+    Route::get('/user', 'UserController@user');
+
     Route::resource('menu','MenuController');
     Route::resource('orders','OrdersController');
 });

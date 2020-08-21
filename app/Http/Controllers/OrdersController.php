@@ -43,7 +43,7 @@ class OrdersController extends Controller
      */
     public function store(Request $request)
     {
-        
+        dd(Auth::check());
         $config = [
             'table' => 'orders',
             'field' => 'order_no',
