@@ -20,4 +20,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1', 'middleware' => 'guest'], function () {
     Route::resource('menu','MenuController');
+    Route::resource('orders','OrdersController');
 });
