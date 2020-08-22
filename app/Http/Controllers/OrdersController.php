@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class OrdersController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -43,7 +44,6 @@ class OrdersController extends Controller
      */
     public function store(Request $request)
     {
-        dd(Auth::check());
         $config = [
             'table' => 'orders',
             'field' => 'order_no',
@@ -51,8 +51,8 @@ class OrdersController extends Controller
             'prefix' => 'ORD-'
         ];
         $order_number = IdGenerator::generate($config);
-        if(Auth::check()){
-            $user = Auth::user()->id;
+        if(auth()->guard('api')->check()){
+            $user = auth()->guard('api')->user();
         }else {
             $guest = Guest::create([
                 'full_name' => $request->full_name,
@@ -65,14 +65,15 @@ class OrdersController extends Controller
             'order_no' => $order_number,
             'user_id' => $user->id ?? null,
             'guest_id' => $guest->id ?? null,
-            'currency' => $request->currency,
+            'currency' => 'EUR',
             'delivery_fee'=> 2,
             'amount' => $request->amount + $request->delivery_fee,
             'status' => "pending",
             'delivery_time' => $request->delivery_time,
         ]);
+        // dd($request->items);
         foreach ($request->items as $item) {
-            $product = Menu::find($item['menu_id']);
+            $product = Menu::find($item["menu_id"]);
             $order_item = OrderItems::create([
                 'order_id' => $order->id,
                 'menu_id' => $product->id,
@@ -81,7 +82,7 @@ class OrdersController extends Controller
                 'price' => $product->price,
             ]);
         }
-        
+
         return new ResourcesOrder($order);
     }
 

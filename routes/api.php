@@ -18,16 +18,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix' => 'v1', 'middleware' => 'guest'], function () {
+Route::group(['prefix' => 'v1','middleware' => ['cors', 'json.response']], function () {
 
-    //Auth
-    Route::post('/register', 'AuthController@register');
-    Route::post('/login', 'AuthController@login');
-    Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail');
-    Route::post('/password/reset', 'ResetPasswordController@reset');
-    Route::get('/user/{id}', 'UserController@show');
-    Route::get('/user', 'UserController@user');
+    Route::post('/login', 'AuthController@login')->name('login.api');
+    Route::post('/register','AuthController@register')->name('register.api');
 
     Route::resource('menu','MenuController');
     Route::resource('orders','OrdersController');
+});
+Route::middleware('auth:api')->group(function () {
+
+    Route::post('/logout', 'AuthController@logout')->name('logout.api');
 });

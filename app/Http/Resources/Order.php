@@ -17,7 +17,7 @@ class Order extends JsonResource
     {
         return [
             'order_number' => $this->order_no,
-            'user' => $this->customer,
+            'user' => new User($this->user),
             'guest' => new Guest($this->guest),
             'currency' => $this->currency,
             'status' => $this->status,

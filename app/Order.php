@@ -13,7 +13,7 @@ class Order extends Model
         return $this->hasMany(OrderItems::class);
     }
 
-    public function customer()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
